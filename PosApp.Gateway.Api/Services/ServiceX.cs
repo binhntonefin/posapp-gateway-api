@@ -14,27 +14,10 @@ namespace LazyPos.Api.Services
 {
     public class ServiceX
     {
-        public bool IsLocalhost
-        {
-            get
-            {
-                return Process.GetCurrentProcess().ProcessName.ToLower().Contains("iisexpress");
-            }
-        }
         protected readonly int UserId;
-        protected readonly bool IsAdmin;
         private readonly string LanguageCode;
         private readonly LanguageType Language;
         protected readonly AdminUserModel User;
-        protected string NotifyFullName
-        {
-            get
-            {
-                var name = User.FullName;
-                if (name.IsStringNullOrEmpty()) name = User.Phone;
-                return name;
-            }
-        }
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepositoryX<LanguageDetail> _languageDetailRepository;
 
@@ -53,10 +36,6 @@ namespace LazyPos.Api.Services
                 {
                     User = identityUser.Value.ToObject<AdminUserModel>();
                 }
-
-                var identityAdmin = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
-                if (identityAdmin != null)
-                    IsAdmin = identityAdmin.Value.ToBoolean();
 
                 var language = GetHeaderValueAs<string>("Accept-Language");
                 if (language.IsStringNullOrEmpty())
@@ -89,10 +68,6 @@ namespace LazyPos.Api.Services
                 {
                     User = identityUser.Value.ToObject<AdminUserModel>();
                 }
-
-                var identityAdmin = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
-                if (identityAdmin != null)
-                    IsAdmin = identityAdmin.Value.ToBoolean();
 
                 var language = GetHeaderValueAs<string>("Accept-Language");
                 if (language.IsStringNullOrEmpty())
